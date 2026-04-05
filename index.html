@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广西北海景点介绍</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 全局平滑滚动：点击导航平滑跳转，使滑动没那么生硬 */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* ========== 将导航栏固定在顶部 ========== */
+        .top-nav {
+            position: fixed; /* 固定在顶部，就算页面在滚动，导航栏位置不变 */
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            text-align: center;
+            background-color: #61aff4; /* 顶部蓝色背景 */
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            font-family: Arial, sans-serif;
+            z-index: 999; /* 利用z—index的属性，保证导航永远在最上层，不会被盖住 */
+        }
+
+        /* ========== 首屏全屏视频容器 ========== */
+        .hero {
+            width: 100%;
+            height: 100vh; /* 铺满整个屏幕高度 */
+            position: relative;
+            overflow: hidden; /* 防止视频溢出屏幕 */
+        }
+
+        /* 让视频全屏铺满 */
+        .hero video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* 让视频按比例填满整个盒子，让超出部分被裁掉，让视频不变形、不黑边 */
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1; /* 视频在最底层，显示导航栏 */
+        }
+
+        /* ========== 右侧导航栏 ========== */
+        .right-nav {
+            position: fixed; /* 固定在右侧，就算页面变化也不会随之变化 */
+            top: 50%; /* 垂直居中 */
+            right: 30px; /* 距离右侧30px */
+            transform: translateY(-50%); /* 垂直居中 */
+            display: flex;
+            flex-direction: column; /* 垂直排列按钮 */
+            gap: 20px; /* 按钮之间的间距 */
+            z-index: 998; /* 使顶部导航栏不会被右侧导航栏遮住，而视屏等图片背景也不会将右侧导航栏遮住 */
+        }
+
+        /* 右侧导航按钮样式 */
+        .nav-btn {
+            padding: 8px 16px;
+            border: 1px solid white; /* 加个白色边框 */
+            border-radius: 20px; /* 圆角胶囊样式 */
+            color: white;
+            text-decoration: none; /* 去掉下划线 */
+            background: rgba(255, 255, 255, 0.2); /* 半透明白色背景 */
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        /* 让鼠标滑过按钮有效果 */
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(1.1); /* 按钮被放大 */
+        }
+
+        /* ========== 让背景图与屏幕宽度相符 ========== */
+        .spot-section {
+            width: 100%; /* 全屏 */
+            min-height: 100vh; /* 每个旅游板块都要占一整个屏幕高度 */
+            padding-top: 60px; /* 防止页面滚动后图片被顶部导航栏挡住 */
+            scroll-margin-top: 60px; /* 解决跳转锚点被顶部导航遮挡的问题 */
+            background-position: center; /* 背景图居中 */
+            background-size: cover; /* 背景图铺满整个屏幕 */
+            background-repeat: no-repeat;
+            display: flex; /* 让文字垂直居中 */
+            align-items: center;
+            padding-left: 60px; 
+            position: relative;
+            margin-top:30px;
+            margin-bottom:30px;
+        }
+
+        /*给背景图加个半透明盒子，让每张背景色比较统一，柔和一点 */
+        .spot-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4); 
+            z-index: 1;
+        }
+
+        /* 景点文字 */
+        .spot-content {
+            position: relative;
+            z-index: 2; /* 让文字在半透明盒子的上层，不会被盖住 */
+            color: white;
+            max-width: 600px; 
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+
+        /* 景点标题样式 */
+        .spot-content h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7); /* 给标题加个阴影 */
+        }
+
+        /* 景点介绍文字样式 */
+        .spot-content p {
+            font-size: 18px;
+            line-height: 1.8; 
+            text-shadow: 0 1px 4px rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部固定导航栏 -->
+    <div class="top-nav">Welcome to Beihai</div>
+
+    <!-- 全屏自动播放视频 -->
+    <div class="hero">
+        <video src="./video/北海1.mp4" autoplay loop muted playsinline></video>
+        
+        <!-- 右侧导航栏，用到了锚点链接的知识点 -->
+        <div class="right-nav">
+            <a href="#yintan" class="nav-btn">银滩</a >
+            <a href="#laojie" class="nav-btn">老街</a >
+            <a href="#weizhoudao" class="nav-btn">涠洲岛</a >
+            <a href="#qiaogang" class="nav-btn">侨港</a >
+            <a href="#jinhaiwan" class="nav-btn">金海湾</a >
+            <a href="#guantouling" class="nav-btn">冠头岭</a >
+        </div>
+    </div>
+
+    <!-- ========== 景点 ========== -->
+    <!-- 1. 银滩 -->
+    <div class="spot-section" id="yintan" style="background-image: url('./images/北海银滩下载.jpg');">
+        <div class="spot-content">
+            <h2>北海银滩</h2>
+            <p>北海银滩被誉为“天下第一滩”，拥有长达24公里的银白色沙滩，沙质细腻柔软，踩上去如同踩在面粉上一般。这里海水清澈湛蓝，浪缓滩平，是国内少有的优质天然海滨浴场。傍晚时分，夕阳洒在海面上，整片沙滩被染成金色，是北海看日落的绝佳地点之一。</p >
+        </div>
+    </div>
+
+    <!-- 2. 北海老街 -->
+    <div class="spot-section" id="laojie" style="background-image: url('./images/老街1.jpg');">
+        <div class="spot-content">
+            <h2>北海老街</h2>
+            <p>北海老街始建于1883年，是一条有着百年历史的骑楼老街，街道两旁全是中西合璧的骑楼式建筑，融合了岭南风情与西洋建筑特色。这里不仅能感受到北海的历史底蕴，还能吃到各种本地特色小吃，虾饼、糖水、越南卷粉应有尽有，是逛吃拍照的好去处。</p >
+        </div>
+    </div>
+
+    <!-- 3. 涠洲岛 -->
+    <div class="spot-section" id="weizhoudao" style="background-image: url('./images/涠洲岛3.jpg');">
+        <div class="spot-content">
+            <h2>涠洲岛</h2>
+            <p>涠洲岛是中国最大、地质年龄最年轻的火山岛，由火山喷发堆凝而成，拥有独特的火山岩地貌和绝美的海岛风光。岛上的鳄鱼山景区能看到壮观的火山岩遗迹，五彩滩的日出、滴水丹屏的日落都堪称一绝，还有原生态的渔村风情，是北海旅游必打卡的目的地。</p >
+        </div>
+    </div>
+
+    <!-- 4. 侨港风情街 -->
+    <div class="spot-section" id="qiaogang" style="background-image: url('./images/侨港1.jpg');">
+        <div class="spot-content">
+            <h2>侨港风情街</h2>
+            <p>侨港风情街是北海的美食天堂，这里居住着很多越南归侨，也因此形成了独特的越南风味美食文化。整条街遍布着糖水铺、海鲜大排档、越南小吃店，24小时都充满烟火气。招牌的椰椰大吉、炒冰、越南卷粉、椒盐皮皮虾，是来北海必吃的美食。</p >
+        </div>
+    </div>
+
+    <!-- 5. 金海湾红树林 -->
+    <div class="spot-section" id="jinhaiwan" style="background-image: url('./images/金海湾.jpg');">
+        <div class="spot-content">
+            <h2>金海湾红树林</h2>
+            <p>金海湾红树林是国家级湿地保护区，拥有一片壮观的“海上森林”，上百亩的红树林生长在滩涂上，随着潮汐涨落呈现出不同的美景。这里可以体验赶海的乐趣，退潮时拿着小桶小铲子去挖蛤蜊、抓小螃蟹，还能看到白鹭等各种鸟类，是感受北海生态风光的好地方。</p >
+        </div>
+    </div>
+
+    <!-- 6. 冠头岭板块 -->
+    <div class="spot-section" id="guantouling" style="background-image: url('./images/冠头岭.jpg');">
+        <div class="spot-content">
+            <h2>冠头岭国家森林公园</h2>
+            <p>冠头岭是北海市区唯一一个有海拔、有礁石的临海山坡，这里有标志性的白色灯塔，还有嶙峋的火山礁石群，海浪拍打礁石的画面极具氛围感，是北海拍婚纱照的热门地。冠头岭的日落也非常有名，站在礁石上看着夕阳沉入大海，浪漫感拉满。</p >
+        </div>
+    </div>
+</body>
+</html>
